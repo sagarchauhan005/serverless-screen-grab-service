@@ -1,0 +1,24 @@
+{
+  "name": "screen-grab",
+  "version": "0.0.1",
+  "description": "screen-grab on the fly service",
+  "main": "index.js",
+  "author": "Sagar Chauhan",
+  "license": "MIT",
+  "dependencies": {
+    "chrome-aws-lambda": "^10.1.0",
+    "puppeteer-core": "^11.0.0",
+    "uuid": "^8.3.2",
+    "valid-url": "^1.0.9"
+  },
+  "scripts": {
+    "test": "mocha tests/unit/",
+    "build:init": "rm -rf package-lock.json node_modules/",
+    "build:local": "npm run build:init && npm install",
+    "build": "npm run build:init && npm install --arch=x64 --platform=linux --production",
+    "invoke": "sls invoke local --function screengrab --path events/event.json"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.1025.0"
+  }
+}

@@ -1,0 +1,49 @@
+service: <your-service-name>
+useDotenv: true
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  timeout: 60
+  region: <your-region>
+  stage: production
+  environment:
+    UploadBucket: <your-bucket-name>
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: s3:*
+      Resource: [
+          "arn:aws:s3:::<your-bucket-name>",
+          "arn:aws:s3:::<your-bucket-name>/*"
+      ]
+  lambdaHashingVersion: '20201221'
+
+# This part will create a S3 bucket automatically.
+# If you already have a bucket, comment the below resources section.
+resources:
+  Resources:
+    # The S3 bucket that stores the assets
+    Assets:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: <your-bucket-name>
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - "*"
+              AllowedMethods:
+                - GET
+                - PUT
+                - HEAD
+              AllowedOrigins:
+                - "*"
+
+functions:
+  screengrab: # you can change the function name here if you want
+    handler: index.handler
+    events:
+      - httpApi:
+          path: /grab
+          method: get
+
